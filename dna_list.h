@@ -7,7 +7,7 @@ public:
   string  bigramAA, bigramAC, bigramAT, bigramAG,
               bigramCA, bigramCC, bigramCT, bigramCG;
   double list_sum, list_mean, list_variance, list_standDev, lineSum;
-
+  int totalGDLine;
   int countA, countC,countT,countG;
   double probA, probC, probT, probG;
   double probAA, probAC, probAT,probAG, probCA, probCC, probCT,probCG;
@@ -17,7 +17,7 @@ public:
   int countAA, countAC, countAT, countAG, countCA, countCC, countCT, countCG;
   string filename, name, id;
 
-  dna_list(string file, string inputName, string inputId);
+  dna_list(string file, string inputFirst, string inputLast, string inputId);
   ~dna_list();
   void readSummaryFile();
   void toSummaryFile();
@@ -28,5 +28,6 @@ public:
   void listStDev();
   void probNucleotide();
   void probBigram();
+  void GaussianDist();
 
 };

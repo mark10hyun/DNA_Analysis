@@ -5,24 +5,27 @@
 #include <string>
 #include <stdio.h>
 #include <ctype.h>
+#include <ctime>
+#include <cstdlib>
 using namespace std;
 char  nucA= 'A', nucC='C', nucT='T', nucG='G';
 string bigramAA= "AA", bigramAC= "AC", bigramAT="AT", bigramAG= "AG",
              bigramCA= "CA", bigramCC= "CC", bigramCT= "CT", bigramCG= "CG";
 
-dna_list::dna_list(string file, string inputName, string inputId)
+dna_list::dna_list(string file, string inputFirst, string inputLast, string inputId)
 {
 
    filename = file;
-   inputName=name;
-   inputId=id;
+   name=inputFirst+" "+inputLast;
+   id=inputId;
    freqNucleotide();
    freqBigram();
    listMean();
    listVar();
    listStDev();
-   readSummaryFile(); //change it to read the summaryfile LATER
    toSummaryFile();
+   readSummaryFile(); //change it to read the summaryfile LATER
+
 }
 
 dna_list::~dna_list()
@@ -173,6 +176,12 @@ void dna_list::probBigram()
   probCC=countCC/list_sum;
   probCT= countCT/list_sum;
   probCG=countCG/list_sum;
+}
+void dna_list:: GaussianDist()
+{
+  totalGDLine=1000;
+  srand(time(0));
+
 }
 void dna_list::toSummaryFile()
 {
