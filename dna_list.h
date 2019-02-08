@@ -16,10 +16,10 @@ public:
   ~dna_list();
   void readSummaryFile();
   void toSummaryFile();
-  void freqNucleotide();
+  double freqNucleotide();
   void freqBigram();
-  void listMean();
-  void listVar();
-  void listStDev();
+  double listMean();
+  double listVar();
+  double listStDev();
 
 };

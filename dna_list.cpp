@@ -29,7 +29,7 @@ dna_list::~dna_list()
 
 }
 
-void dna_list::freqNucleotide()
+double dna_list::freqNucleotide()
 {
   string line;
   ifstream dnaFile (filename); //Reads the User's DNA File
@@ -69,6 +69,7 @@ cout<<"Count for T: "<<countT<<endl;
 cout<<"Count for C: "<<countC<<endl;
 cout<<"Count for G: "<<countG<<endl;
 */
+return list_sum;
 }
 
 void dna_list:: freqBigram() //finds total occurence of each bigram
@@ -134,20 +135,25 @@ cout<<"Count for CT: "<<countCT<<endl;
 cout<<"Count for CG: "<<countCG<<endl;
 */
 }
-void dna_list:: listMean()
+double dna_list:: listMean()
 {
   list_mean = list_sum/lineSum;
  cout<<"list mean: "<< list_mean<<endl;
+ return list_mean;
 }
-void dna_list:: listVar()
+double dna_list:: listVar()
 {
-  list_variance = (pow(countA-list_mean,2) + pow(countC-list_mean,2)+ pow(countT-list_mean,2)+pow(countG-list_mean,2))/list_mean;
-//  cout<<"list Variance: "<<list_variance<<endl;
+  list_variance = pow(list_sum-list_mean, 2)/list_sum;
+  cout<<"list Variance: "<<list_variance<<endl;
+  return list_variance;
+
 }
-void dna_list:: listStDev()
+double dna_list:: listStDev()
 {
   list_standDev= sqrt(list_variance);
-  //cout<<"list Standard Deviation: "<<list_standDev<<endl;
+  cout<<"list Standard Deviation: "<<list_standDev<<endl;
+  return list_variance;
+
 }
 
 void dna_list::toSummaryFile()
