@@ -9,6 +9,7 @@ using namespace std;
 char  nucA= 'A', nucC='C', nucT='T', nucG='G';
 string bigramAA= "AA", bigramAC= "AC", bigramAT="AT", bigramAG= "AG",
              bigramCA= "CA", bigramCC= "CC", bigramCT= "CT", bigramCG= "CG";
+
 dna_list::dna_list(string file, string inputName, string inputId)
 {
 
@@ -20,8 +21,8 @@ dna_list::dna_list(string file, string inputName, string inputId)
    listMean();
    listVar();
    listStDev();
-   //readSummaryFile(); //change it to read the summaryfile LATER
-   //toSummaryFile();
+   readSummaryFile(); //change it to read the summaryfile LATER
+   toSummaryFile();
 }
 
 dna_list::~dna_list()
@@ -29,7 +30,7 @@ dna_list::~dna_list()
 
 }
 
-double dna_list::freqNucleotide()
+void dna_list::freqNucleotide()
 {
   string line;
   ifstream dnaFile (filename); //Reads the User's DNA File
@@ -69,7 +70,7 @@ cout<<"Count for T: "<<countT<<endl;
 cout<<"Count for C: "<<countC<<endl;
 cout<<"Count for G: "<<countG<<endl;
 */
-return list_sum;
+
 }
 
 void dna_list:: freqBigram() //finds total occurence of each bigram
@@ -135,27 +136,44 @@ cout<<"Count for CT: "<<countCT<<endl;
 cout<<"Count for CG: "<<countCG<<endl;
 */
 }
-double dna_list:: listMean()
+void dna_list:: listMean()
 {
   list_mean = list_sum/lineSum;
  cout<<"list mean: "<< list_mean<<endl;
- return list_mean;
+
 }
-double dna_list:: listVar()
+void dna_list:: listVar()
 {
   list_variance = pow(list_sum-list_mean, 2)/list_sum;
   cout<<"list Variance: "<<list_variance<<endl;
-  return list_variance;
+
 
 }
-double dna_list:: listStDev()
+void dna_list:: listStDev()
 {
   list_standDev= sqrt(list_variance);
   cout<<"list Standard Deviation: "<<list_standDev<<endl;
-  return list_variance;
+
 
 }
-
+void dna_list::probNucleotide()
+{
+   probA = countA/list_sum;
+   probC = countC/list_sum;
+   probT = countT/list_sum;
+   probG= countG/list_sum;
+}
+void dna_list::probBigram()
+{
+  probAA= countAA/list_sum;
+  probAC=countAC/list_sum;
+  probAT=countAT/list_sum;
+  probAG=countAG/list_sum;
+  probCA=countCA/list_sum;
+  probCC=countCC/list_sum;
+  probCT= countCT/list_sum;
+  probCG=countCG/list_sum;
+}
 void dna_list::toSummaryFile()
 {
   ofstream summaryFile ("MarkHyun.txt");
@@ -163,6 +181,13 @@ void dna_list::toSummaryFile()
   {
     summaryFile << name<<endl;
     summaryFile << id<<endl;
+    summaryFile<<"Your DNA List Summary "<<endl;
+    summaryFile<<endl;
+    summaryFile<<endl;
+    summaryFile<<"Sum of total nucleotides in your DNA List: "<<list_sum<<endl;
+    summaryFile<<"Mean of your DNA List: "<<list_mean<<endl;
+    summaryFile<<"Variance of your DNA List: "<< list_variance<<endl;
+    summaryFile<<"Standard Deviation of you DNA List: "<<list_standDev<<endl;
     summaryFile.close();
   }
   else cout << "Unable to open file";
@@ -170,7 +195,7 @@ void dna_list::toSummaryFile()
 void dna_list::readSummaryFile()
 {
   string line;
-  ifstream dnaFile (filename); //Reads the User's DNA File
+  ifstream dnaFile ("MarkHyun.txt"); //Reads the User's DNA File
 if (dnaFile.is_open())
 {
   while ( getline (dnaFile,line) )

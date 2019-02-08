@@ -9,6 +9,11 @@ public:
   double list_sum, list_mean, list_variance, list_standDev, lineSum;
 
   int countA, countC,countT,countG;
+  double probA, probC, probT, probG;
+  double probAA, probAC, probAT,probAG, probCA, probCC, probCT,probCG;
+
+
+
   int countAA, countAC, countAT, countAG, countCA, countCC, countCT, countCG;
   string filename, name, id;
 
@@ -16,10 +21,12 @@ public:
   ~dna_list();
   void readSummaryFile();
   void toSummaryFile();
-  double freqNucleotide();
+  void freqNucleotide();
   void freqBigram();
-  double listMean();
-  double listVar();
-  double listStDev();
+  void listMean();
+  void listVar();
+  void listStDev();
+  void probNucleotide();
+  void probBigram();
 
 };
