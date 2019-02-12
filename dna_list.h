@@ -11,8 +11,10 @@ public:
   int countA, countC,countT,countG;
   double probA, probC, probT, probG;
   double probAA, probAC, probAT,probAG, probCA, probCC, probCT,probCG;
-
-
+  double rand_a , rand_b;
+  double box_muller;
+  int rand_stringLength;
+  int rand_nucleotide;
 
   int countAA, countAC, countAT, countAG, countCA, countCC, countCT, countCG;
   string filename, name, id;

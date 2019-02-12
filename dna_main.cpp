@@ -14,15 +14,16 @@ int main(int argc, char const *argv[]) {
   while (decision==1) {
     cout<<"Please type in the name of your file that you want to read for DNA Analysis. *include .txt"<<endl;
     cin>>userFile;
-    cout<<"What is your First Name"<<endl;
+    cout<<"What is your First Name (*FIRST ONLY*)"<<endl;
     cin>>userFirst;
-    cout<<"What is your Last Name"<<endl;
+    cout<<"What is your Last Name (*LAST ONLY*)"<<endl;
     cin>>userLast;
-    cout<<"What is your Id"<<endl;
+    cout<<"What is your school I.D"<<endl;
     cin>>userId;
     dna_list object1(userFile,userFirst, userLast,userId);
     cout<<"Do you want to create another list? Type 1 for YES & 0 for NO"<<endl;
     cin>>decision;
+    cout<<endl;
   }
 
   return 0;

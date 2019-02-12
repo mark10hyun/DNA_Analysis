@@ -1,5 +1,6 @@
 #include "dna_list.h"
 #include <iostream>
+#include <stdlib.h>
 #include <fstream>
 #include <cmath>
 #include <string>
@@ -8,32 +9,34 @@
 #include <ctime>
 #include <cstdlib>
 using namespace std;
+/*
 char  nucA= 'A', nucC='C', nucT='T', nucG='G';
 string bigramAA= "AA", bigramAC= "AC", bigramAT="AT", bigramAG= "AG",
              bigramCA= "CA", bigramCC= "CC", bigramCT= "CT", bigramCG= "CG";
-
-dna_list::dna_list(string file, string inputFirst, string inputLast, string inputId)
+*/
+dna_list::dna_list(string file, string inputFirst, string inputLast, string inputId) //overloaded constructor
 {
-
    filename = file;
    name=inputFirst+" "+inputLast;
    id=inputId;
-   freqNucleotide();
-   freqBigram();
-   listMean();
-   listVar();
-   listStDev();
-   toSummaryFile();
-   readSummaryFile(); //change it to read the summaryfile LATER
 
+   freqNucleotide();//Counting the total occurence of each nucleotide in provided DNA list
+   freqBigram();//Counting the total occurence of each nucleotide in provided DNA list
+   listMean();//Calculating mean of provided DNA list
+   listVar();//Calculating variance of provided DNA list
+   listStDev();//Calculating standard deviation of provided DNA list
+   probNucleotide(); //Finding the probaility of the occurence of each nucleotide
+   probBigram(); //Finding the probability of the occurence of each Bigram
+   toSummaryFile();//Writing the initial Summary with name and ID and stats of list provided
+   GaussianDist();//Calculation to create 1000 randomly generated DNA strings.
+   readSummaryFile(); //Read summary file with 1000 randomly generated DNA Strings.
 }
 
-dna_list::~dna_list()
+dna_list::~dna_list() //deconstructor
 {
-
 }
 
-void dna_list::freqNucleotide()
+void dna_list::freqNucleotide() //Counts the number of occurences of each nucleotide [A,C,G,T]
 {
   string line;
   ifstream dnaFile (filename); //Reads the User's DNA File
@@ -41,10 +44,10 @@ if (dnaFile.is_open())
 {
   while ( getline (dnaFile,line) )
   {
-    lineSum++;
+    lineSum++; //counts number of lines in file
     for(int i = 0; i < line.size(); i++)
     {
-      list_sum++;
+      list_sum++; //counts number of total nucleotides in file.
       switch(toupper(line[i])) //used to count the frequencies of each nucleotide & adds to Counter
       {
         case 'A':countA++;
@@ -76,7 +79,7 @@ cout<<"Count for G: "<<countG<<endl;
 
 }
 
-void dna_list:: freqBigram() //finds total occurence of each bigram
+void dna_list:: freqBigram() //finds total occurence of each bigram [AA,AC,AT,AG,CA,CC,CT,CG]
 {
   string line;
   ifstream dnaFile (filename); //Reads the User's DNA File
@@ -139,23 +142,23 @@ cout<<"Count for CT: "<<countCT<<endl;
 cout<<"Count for CG: "<<countCG<<endl;
 */
 }
-void dna_list:: listMean()
+void dna_list:: listMean()//finds the mean of entire file
 {
   list_mean = list_sum/lineSum;
- cout<<"list mean: "<< list_mean<<endl;
+// cout<<"list mean: "<< list_mean<<endl;
 
 }
-void dna_list:: listVar()
+void dna_list:: listVar()//finds the Variance of entire file
 {
   list_variance = pow(list_sum-list_mean, 2)/list_sum;
-  cout<<"list Variance: "<<list_variance<<endl;
+//  cout<<"list Variance: "<<list_variance<<endl;
 
 
 }
-void dna_list:: listStDev()
+void dna_list:: listStDev() //finds the standard deviation of entire file
 {
   list_standDev= sqrt(list_variance);
-  cout<<"list Standard Deviation: "<<list_standDev<<endl;
+  //cout<<"list Standard Deviation: "<<list_standDev<<endl;
 
 
 }
@@ -179,28 +182,90 @@ void dna_list::probBigram()
 }
 void dna_list:: GaussianDist()
 {
-  totalGDLine=1000;
-  srand(time(0));
+  ofstream appendToFile;
+  appendToFile.open("MarkHyun.txt",ios::app);
+  appendToFile<<"|1000 Randomly generated DNA strings|"<<endl;
+  totalGDLine=0;
+srand(time(0));
+  while(totalGDLine<1000) //setting the total amount of lines for Gaussian Distibrution
+  {
 
+    rand_a = double(rand())/ double(RAND_MAX); //generates random number from 0 to 1
+    //generates random number from 0 to 1
+    rand_b = double(rand())/double(RAND_MAX);
+    //cout<<rand_a<<"  -rand a"<<endl;
+    box_muller = sqrt(-2 *log(rand_a)) * cos(2*3.14* rand_b); //C
+    cout<<box_muller<<"  box_muller"<<endl;
+
+    rand_stringLength= list_standDev*box_muller+list_mean;//D
+    rand_stringLength = (int) rand_stringLength;
+    cout<<rand_stringLength<<"  length"<<endl;
+    totalGDLine++;
+
+   for(int i = 0; i <rand_stringLength; i ++) //loop for generating random nucleotides.
+   {
+     rand_nucleotide= rand()%3+0;
+     switch (rand_nucleotide) {
+       case 0:
+              appendToFile <<"A";
+              break;
+       case 1:
+              appendToFile <<"C";
+              break;
+       case 2:
+              appendToFile <<"G";
+              break;
+       case 3:
+              appendToFile <<"T";
+              break;
+     }
+   }
+   appendToFile<<endl;
 }
+appendToFile.close();
+}
+
 void dna_list::toSummaryFile()
 {
   ofstream summaryFile ("MarkHyun.txt");
   if (summaryFile.is_open())
   {
+    summaryFile<<endl;
     summaryFile << name<<endl;
     summaryFile << id<<endl;
-    summaryFile<<"Your DNA List Summary "<<endl;
+    summaryFile<<endl;
+    summaryFile<<"  |Your DNA List Summary| "<<endl;
+    summaryFile<<" -------------------------" <<endl;
+    summaryFile<<"  Total nucleotides in your DNA List: "<<list_sum<<endl;
+    summaryFile<<"  Mean of your DNA List: "<<list_mean<<endl;
+    summaryFile<<"  Variance of your DNA List: "<< list_variance<<endl;
+    summaryFile<<"  Standard Deviation of your DNA List: "<<list_standDev<<endl;
+    summaryFile<<endl;
+    summaryFile<<" |Probabilities of Nucleotides|"<<endl;
+    summaryFile<<"--------------------------------"<<endl;
+    summaryFile<<"  Probability of nucleotide A: "<< probA<<endl;
+    summaryFile<<"  Probability of nucleotide C: "<< probC<<endl;
+    summaryFile<<"  Probability of nucleotide T: "<< probT<<endl;
+    summaryFile<<"  Probability of nucleotide G: "<< probG<<endl;
+    summaryFile<<endl;
+    summaryFile<<"  |Probability of Bigrams|"<<endl;
+    summaryFile<<" --------------------------"<<endl;
+    summaryFile<<"  Probability of Bigram AA: "<< probAA<<endl;
+    summaryFile<<"  Probability of Bigram AC: "<< probAC<<endl;
+    summaryFile<<"  Probability of Bigram AT: "<< probAT<<endl;
+    summaryFile<<"  Probability of Bigram AG: "<< probAG<<endl;
+    summaryFile<<"  Probability of Bigram CA: "<< probCA<<endl;
+    summaryFile<<"  Probability of Bigram CC: "<< probCC<<endl;
+    summaryFile<<"  Probability of Bigram CT: "<< probCT<<endl;
+    summaryFile<<"  Probability of Bigram AA: "<< probCG<<endl;
     summaryFile<<endl;
     summaryFile<<endl;
-    summaryFile<<"Sum of total nucleotides in your DNA List: "<<list_sum<<endl;
-    summaryFile<<"Mean of your DNA List: "<<list_mean<<endl;
-    summaryFile<<"Variance of your DNA List: "<< list_variance<<endl;
-    summaryFile<<"Standard Deviation of you DNA List: "<<list_standDev<<endl;
+    summaryFile<<endl;
     summaryFile.close();
   }
   else cout << "Unable to open file";
 }
+
 void dna_list::readSummaryFile()
 {
   string line;
