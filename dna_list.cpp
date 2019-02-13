@@ -29,7 +29,7 @@ dna_list::dna_list(string file, string inputFirst, string inputLast, string inpu
    probBigram(); //Finding the probability of the occurence of each Bigram
    toSummaryFile();//Writing the initial Summary with name and ID and stats of list provided
    GaussianDist();//Calculation to create 1000 randomly generated DNA strings.
-   freqGDtoSummary();
+   //freqGDtoSummary();
    readSummaryFile(); //Read summary file with 1000 randomly generated DNA Strings.
 }
 
@@ -192,8 +192,9 @@ void dna_list:: GaussianDist()
   freqG=0;
   freqT=0;
   ofstream appendToFile;
-  appendToFile.open("MarkHyun.txt",ios::app);
+  appendToFile.open("mark.txt",ios::app);
   appendToFile<<"|1000 Randomly generated DNA strings|"<<endl;
+  appendToFile<<endl;
   totalGDLine=0;
   srand(time(0));
   while(totalGDLine<1000) //setting the total amount of lines for Gaussian Distibrution
@@ -212,15 +213,15 @@ void dna_list:: GaussianDist()
     {
       //cout<<rand_stringLength<<"  length"<<endl;
       totalGDLine++;
-
+      appendToFile<<"DNA String #"<<totalGDLine<<": ";
      for(int i = 0; i <rand_stringLength; i ++) //loop for generating random nucleotides.
      {
-       rand_nucleotide= rand()%4+0;
-       switch (rand_nucleotide)
+       rand_nucleotide= rand()%4+0; //generates random number btw 0 - 3
+       switch (rand_nucleotide)//assigned nucleotide to number. When random number is generated, the nucleotide associated with that number will be counted for.
         {
          case 0:
                 appendToFile <<"A";
-                freqA++;
+                freqA++;//adds to total of occurences of nuc A in 1000 random dna strings.
                 break;
          case 1:
                 appendToFile <<"C";
@@ -239,8 +240,17 @@ void dna_list:: GaussianDist()
    appendToFile<<endl;
     }
   }
-appendToFile.close();
+  appendToFile<<endl;
+  appendToFile<<"Frequencies of Nucleotides in 1000 Random Generated DNA Strings"<<endl;
+  appendToFile<<"----------------------------------------------------------------"<<endl;
+  appendToFile<<endl;
+  appendToFile<<"  Relative frequency of nucleotide A: "<< freqA<<endl;
+  appendToFile<<"  Relative frequency of nucleotide C: "<< freqC<<endl;
+  appendToFile<<"  Relative frequency of nucleotide T: "<< freqT<<endl;
+  appendToFile<<"  Relative frequency of nucleotide G: "<< freqG<<endl;
+  appendToFile.close();
 }
+/*
 void dna_list::freqGDtoSummary()
 {
   string line;
@@ -255,7 +265,7 @@ void dna_list::freqGDtoSummary()
       summaryLineCount++;
       if(summaryLineCount==30)//this condition will print the stats for the Gaussian freq nucleotide after Original summary.
       {
-        freqGDToFile.open("markhyun.txt",ios::app);
+        freqGDToFile.open("mark.txt",ios::app);
         freqGDToFile<<"Relative frequencies for the 1000 random DNA Strings"<<endl;
         freqGDToFile<<"  Relative frequency of nucleotide A: "<< freqA<<endl;
         freqGDToFile<<"  Relative frequency of nucleotide C: "<< freqC<<endl;
@@ -268,15 +278,15 @@ void dna_list::freqGDtoSummary()
   }
 
 }
-
+*/
 void dna_list::toSummaryFile()
 {
-  ofstream summaryFile ("markhyun.txt");
+  ofstream summaryFile ("mark.txt");
   if (summaryFile.is_open())
   {
     summaryFile<<endl;
-    summaryFile << name<<endl;
-    summaryFile << id<<endl;
+    summaryFile <<"NAME: "<< name<<endl;
+    summaryFile <<"STUDENT I.D: "<< id<<endl;
     summaryFile<<endl;
     summaryFile<<"  |Your DNA List Summary| "<<endl;
     summaryFile<<" -------------------------" <<endl;
@@ -316,7 +326,7 @@ void dna_list::toSummaryFile()
 void dna_list::readSummaryFile()
 {
   string line;
-  ifstream dnaFile ("MarkHyun.txt"); //Reads the User's DNA File
+  ifstream dnaFile ("mark.txt"); //Reads the User's DNA File
   if (dnaFile.is_open())
   {
     while ( getline (dnaFile,line) )
