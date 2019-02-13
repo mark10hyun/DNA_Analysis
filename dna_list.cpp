@@ -29,6 +29,7 @@ dna_list::dna_list(string file, string inputFirst, string inputLast, string inpu
    probBigram(); //Finding the probability of the occurence of each Bigram
    toSummaryFile();//Writing the initial Summary with name and ID and stats of list provided
    GaussianDist();//Calculation to create 1000 randomly generated DNA strings.
+   freqGDtoSummary();
    readSummaryFile(); //Read summary file with 1000 randomly generated DNA Strings.
 }
 
@@ -50,15 +51,19 @@ if (dnaFile.is_open())
       list_sum++; //counts number of total nucleotides in file.
       switch(toupper(line[i])) //used to count the frequencies of each nucleotide & adds to Counter
       {
-        case 'A':countA++;
-            break;
-        case 'C': countC++;
-                    break;
-        case 'G': countG++;
+        case 'A':
+                  countA++;
                   break;
-        case 'T': countT++;
+        case 'C':
+                  countC++;
                   break;
-        default: cout<<"No similar nucleotides"<<endl;
+        case 'G':
+                  countG++;
+                  break;
+        case 'T':
+                  countT++;
+                  break;
+        default:
                   break;
       }
     }
@@ -89,7 +94,7 @@ if (dnaFile.is_open())
   {
     for(int i = 0; i < line.size(); i++)
     {
-      char nextchar= toupper(line[i+1]);
+      char nextchar= toupper(line[i+1]); // toupper() - making all nucleotides in file upper in order for easier comparison.
       if(toupper(line[i])== 'A' && nextchar=='A')
       {
           countAA++;
@@ -182,52 +187,91 @@ void dna_list::probBigram()
 }
 void dna_list:: GaussianDist()
 {
+  freqA=0;
+  freqC=0;
+  freqG=0;
+  freqT=0;
   ofstream appendToFile;
   appendToFile.open("MarkHyun.txt",ios::app);
   appendToFile<<"|1000 Randomly generated DNA strings|"<<endl;
   totalGDLine=0;
-srand(time(0));
+  srand(time(0));
   while(totalGDLine<1000) //setting the total amount of lines for Gaussian Distibrution
   {
-
+    //cout<<totalGDLine<<endl;
     rand_a = double(rand())/ double(RAND_MAX); //generates random number from 0 to 1
-    //generates random number from 0 to 1
+  //  cout<<rand_a<<"  -rand a"<<endl;
     rand_b = double(rand())/double(RAND_MAX);
-    //cout<<rand_a<<"  -rand a"<<endl;
+  //  cout<<rand_b<<"  -rand b"<<endl;
     box_muller = sqrt(-2 *log(rand_a)) * cos(2*3.14* rand_b); //C
-    cout<<box_muller<<"  box_muller"<<endl;
+  //  cout<<box_muller<<"  box_muller"<<endl;
 
     rand_stringLength= list_standDev*box_muller+list_mean;//D
     rand_stringLength = (int) rand_stringLength;
-    cout<<rand_stringLength<<"  length"<<endl;
-    totalGDLine++;
+    if(rand_stringLength>0)//condition to count only randomly generated numbers that have a string size.
+    {
+      //cout<<rand_stringLength<<"  length"<<endl;
+      totalGDLine++;
 
-   for(int i = 0; i <rand_stringLength; i ++) //loop for generating random nucleotides.
-   {
-     rand_nucleotide= rand()%3+0;
-     switch (rand_nucleotide) {
-       case 0:
-              appendToFile <<"A";
-              break;
-       case 1:
-              appendToFile <<"C";
-              break;
-       case 2:
-              appendToFile <<"G";
-              break;
-       case 3:
-              appendToFile <<"T";
-              break;
+     for(int i = 0; i <rand_stringLength; i ++) //loop for generating random nucleotides.
+     {
+       rand_nucleotide= rand()%4+0;
+       switch (rand_nucleotide)
+        {
+         case 0:
+                appendToFile <<"A";
+                freqA++;
+                break;
+         case 1:
+                appendToFile <<"C";
+                freqC++;
+                break;
+         case 2:
+                appendToFile <<"G";
+                freqG++;
+                break;
+         case 3:
+                appendToFile <<"T";
+                freqT++;
+                break;
+        }
      }
-   }
    appendToFile<<endl;
-}
+    }
+  }
 appendToFile.close();
+}
+void dna_list::freqGDtoSummary()
+{
+  string line;
+  ofstream freqGDToFile;
+  ifstream addingTosummaryFile;
+
+
+  if (addingTosummaryFile.is_open())
+  {
+    while ( getline (addingTosummaryFile,line) )
+    {
+      summaryLineCount++;
+      if(summaryLineCount==30)//this condition will print the stats for the Gaussian freq nucleotide after Original summary.
+      {
+        freqGDToFile.open("markhyun.txt",ios::app);
+        freqGDToFile<<"Relative frequencies for the 1000 random DNA Strings"<<endl;
+        freqGDToFile<<"  Relative frequency of nucleotide A: "<< freqA<<endl;
+        freqGDToFile<<"  Relative frequency of nucleotide C: "<< freqC<<endl;
+        freqGDToFile<<"  Relative frequency of nucleotide T: "<< freqT<<endl;
+        freqGDToFile<<"  Relative frequency of nucleotide G: "<< freqG<<endl;
+        freqGDToFile<<endl;
+        freqGDToFile.close();
+      }
+    }
+  }
+
 }
 
 void dna_list::toSummaryFile()
 {
-  ofstream summaryFile ("MarkHyun.txt");
+  ofstream summaryFile ("markhyun.txt");
   if (summaryFile.is_open())
   {
     summaryFile<<endl;
@@ -263,25 +307,28 @@ void dna_list::toSummaryFile()
     summaryFile<<endl;
     summaryFile.close();
   }
-  else cout << "Unable to open file";
+  else
+  {
+    cout << "Unable to open file";
+  }
 }
 
 void dna_list::readSummaryFile()
 {
   string line;
   ifstream dnaFile ("MarkHyun.txt"); //Reads the User's DNA File
-if (dnaFile.is_open())
-{
-  while ( getline (dnaFile,line) )
+  if (dnaFile.is_open())
   {
-    cout << line << '\n';
+    while ( getline (dnaFile,line) )
+    {
+      cout << line << '\n';
+    }
+    dnaFile.close();
   }
-  dnaFile.close();
-}
 
-else
-{
-  cout << "Unable to open file";
-}
+  else
+  {
+    cout << "Unable to open file";
+  }
 
 }

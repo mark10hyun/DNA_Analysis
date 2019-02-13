@@ -9,13 +9,14 @@ public:
   double list_sum, list_mean, list_variance, list_standDev, lineSum;
   int totalGDLine;
   int countA, countC,countT,countG;
+  int freqA, freqC, freqT, freqG;
   double probA, probC, probT, probG;
   double probAA, probAC, probAT,probAG, probCA, probCC, probCT,probCG;
   double rand_a , rand_b;
   double box_muller;
   int rand_stringLength;
   int rand_nucleotide;
-
+  int summaryLineCount;
   int countAA, countAC, countAT, countAG, countCA, countCC, countCT, countCG;
   string filename, name, id;
 
@@ -31,5 +32,6 @@ public:
   void probNucleotide();
   void probBigram();
   void GaussianDist();
+  void freqGDtoSummary();
 
 };
